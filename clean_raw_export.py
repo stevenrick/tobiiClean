@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import csv
 import Tkinter as tk
-from Tkinter import filedialog
+import tkFileDialog
 from decimal import Decimal
 from io import BytesIO
 
@@ -60,6 +60,7 @@ def csv_reduce(parDir):
             # save accel data
             selection[["Recording timestamp", "Accelerometer X", "Accelerometer Y",
                        "Accelerometer Z"]].dropna().to_csv(f_out_accel, index=False)
+            os.remove(f_path)
     print("Reduce / Split Done")
     return
 
@@ -67,7 +68,7 @@ def csv_reduce(parDir):
 def main():
     root = tk.Tk()
     root.withdraw()
-    parDir = filedialog.askdirectory()
+    parDir = tkFileDialog.askdirectory()
     tsv_to_csv(parDir)
     csv_reduce(parDir)
     return
