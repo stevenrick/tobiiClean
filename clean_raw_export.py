@@ -20,7 +20,9 @@ def tsv_to_csv(in_file):
     par_dir = os.path.dirname(in_file)
     f_name = os.path.split(in_file)[1]
 
-    out_name = os.path.splitext(os.path.join(par_dir, f_name))[0] + "_out.csv"
+    f_name_new = f_name.replace("_raw_export", "")
+
+    out_name = os.path.splitext(os.path.join(par_dir, f_name_new))[0] + "_out.csv"
     f_out = os.path.join(par_dir, out_name)
     with open(f_path, 'rb') as tsv_in, open(f_out, 'wb') as csv_out:
         c = tsv_in.read().decode('utf-16').encode('utf-8')
