@@ -2,10 +2,17 @@ import os
 import pandas as pd
 import csv
 import sys
-import Tkinter as tk
-import tkFileDialog
 from decimal import Decimal
 from io import BytesIO
+
+
+def find_all_files(starting_dir, match_str):
+    results = list()
+    for root, dirs, files in os.walk(starting_dir):
+        for f in files:
+            if match_str in f:
+                results.append(os.path.join(root, f))
+    return results
 
 
 def tsv_to_csv(in_file):	
@@ -16,7 +23,7 @@ def tsv_to_csv(in_file):
     out_name = os.path.splitext(os.path.join(par_dir, f_name))[0] + "_out.csv"
     f_out = os.path.join(par_dir, out_name)
     with open(f_path, 'rb') as tsv_in, open(f_out, 'wb') as csv_out:
-    	c = tsv_in.read().decode('utf-16').encode('utf-8')
+        c = tsv_in.read().decode('utf-16').encode('utf-8')
         csv_write = csv.writer(csv_out)
         rowcount = 0
         for row in csv.reader(BytesIO(c), delimiter='\t'):
@@ -32,10 +39,10 @@ def csv_reduce(csv_in):
     csv_path = csv_in
     csv_dir = os.path.dirname(csv_in)
     csv_name = os.path.split(csv_in)[1]
-            
+
     out_gaze = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_eye-gaze.csv"
-    out_accel = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_eye-accel.csv"
-    out_gyro = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_eye-gyro.csv"
+    out_accel = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_accel.csv"
+    out_gyro = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_gyro.csv"
     f_out_gaze = os.path.join(csv_dir, out_gaze)
     f_out_accel = os.path.join(csv_dir, out_accel)
     f_out_gyro = os.path.join(csv_dir, out_gyro)
@@ -61,12 +68,14 @@ def csv_reduce(csv_in):
 
 
 def main():
-    for arg in sys.argv:
-        if os.path.splitext(arg)[1] == ".tsv":
-            csv_f = tsv_to_csv(arg)
-            csv_reduce(csv_f)
+    starting_dir = sys.argv[1]
+    match_str = "_raw_export.tsv"
+    file_list = find_all_files(starting_dir, match_str)
+    for f in file_list:
+        csv_f = tsv_to_csv(f)
+        csv_reduce(csv_f)
     return
 
 
-main()
-
+if __name__ == "__main__":
+    main()
