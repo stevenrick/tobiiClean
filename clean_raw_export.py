@@ -51,22 +51,25 @@ def csv_reduce(csv_in):
     f_out_accel = os.path.join(csv_dir, out_accel)
     f_out_gyro = os.path.join(csv_dir, out_gyro)
     data = pd.read_csv(csv_path, header=0)
-    selection = data[["Recording timestamp", "Gaze point X", "Gaze point Y",
-                        "Gaze 3D position combined X", "Gaze 3D position combined Y",
-                        "Gaze 3D position combined Z", "Pupil diameter left", "Pupil diameter right", "Gyro X",
-                        "Gyro Y", "Gyro Z", "Accelerometer X", "Accelerometer Y", "Accelerometer Z"]]
-    del(data)
-    milliToSec = lambda x: Decimal(x) / Decimal(1000.0)
-    selection["Recording timestamp"] = selection["Recording timestamp"].apply(milliToSec)
-    # save gaze data
-    selection[["Recording timestamp", "Gaze point X", "Gaze point Y",
-                "Gaze 3D position combined X", "Gaze 3D position combined Y", "Gaze 3D position combined Z",
-                "Pupil diameter left", "Pupil diameter right"]].dropna().to_csv(f_out_gaze, index=False)
-    # save gyro data
-    selection[["Recording timestamp", "Gyro X", "Gyro Y", "Gyro Z"]].dropna().to_csv(f_out_gyro, index=False)
-    # save accel data
-    selection[["Recording timestamp", "Accelerometer X", "Accelerometer Y",
-                "Accelerometer Z"]].dropna().to_csv(f_out_accel, index=False)
+    try:
+        selection = data[["Recording timestamp", "Gaze point X", "Gaze point Y",
+                            "Gaze 3D position combined X", "Gaze 3D position combined Y",
+                            "Gaze 3D position combined Z", "Pupil diameter left", "Pupil diameter right", "Gyro X",
+                            "Gyro Y", "Gyro Z", "Accelerometer X", "Accelerometer Y", "Accelerometer Z"]]
+        del(data)
+        milliToSec = lambda x: Decimal(x) / Decimal(1000.0)
+        selection["Recording timestamp"] = selection["Recording timestamp"].apply(milliToSec)
+        # save gaze data
+        selection[["Recording timestamp", "Gaze point X", "Gaze point Y",
+                    "Gaze 3D position combined X", "Gaze 3D position combined Y", "Gaze 3D position combined Z",
+                    "Pupil diameter left", "Pupil diameter right"]].dropna().to_csv(f_out_gaze, index=False)
+        # save gyro data
+        selection[["Recording timestamp", "Gyro X", "Gyro Y", "Gyro Z"]].dropna().to_csv(f_out_gyro, index=False)
+        # save accel data
+        selection[["Recording timestamp", "Accelerometer X", "Accelerometer Y",
+                    "Accelerometer Z"]].dropna().to_csv(f_out_accel, index=False)
+    except KeyError:
+        print("KeyError in %s" % csv_in)
     os.remove(csv_path)
     return
 
