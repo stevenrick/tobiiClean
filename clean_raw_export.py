@@ -42,9 +42,11 @@ def csv_reduce(csv_in):
     csv_dir = os.path.dirname(csv_in)
     csv_name = os.path.split(csv_in)[1]
 
-    out_gaze = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_eye-gaze.csv"
-    out_accel = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_accel.csv"
-    out_gyro = os.path.splitext(os.path.join(csv_dir, csv_name))[0] + "_gyro.csv"
+    csv_name_new = csv_name.replace("_out", "")
+
+    out_gaze = os.path.splitext(os.path.join(csv_dir, csv_name_new))[0] + "_eye-gaze.csv"
+    out_accel = os.path.splitext(os.path.join(csv_dir, csv_name_new))[0] + "_accel.csv"
+    out_gyro = os.path.splitext(os.path.join(csv_dir, csv_name_new))[0] + "_gyro.csv"
     f_out_gaze = os.path.join(csv_dir, out_gaze)
     f_out_accel = os.path.join(csv_dir, out_accel)
     f_out_gyro = os.path.join(csv_dir, out_gyro)
